@@ -62,7 +62,7 @@ n + c * ((1 + k) * (k/2)) => n + c * (k/2 + k²/2) => n + ck/2 + ck²/2 => n + c
 
 **Amortização => n²/n=O(n)**
 
-### Amortização da estratégia de duplicação
+#### Amortização da estratégia de duplicação
 
 Para a comparação, pensa-se em um array de uma posição, inicialmente vazio.
 
