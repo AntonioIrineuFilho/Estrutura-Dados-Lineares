@@ -12,13 +12,13 @@ interface Pilha {
     public boolean isEmpty();
 }
 
-public class PilhaWithArray implements Pilha {
-    public int max_size;
-    public int top;
-    public int constant;
-    public Object[] array;
+public class PilhaComArray implements Pilha {
+    private int max_size;
+    private int top;
+    private int constant;
+    private Object[] array;
 
-    public PilhaWithArray(int max_size, int constant) {
+    public PilhaComArray(int max_size, int constant) {
         this.max_size = max_size;
         this.top = -1;
         this.constant = constant;

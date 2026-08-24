@@ -75,3 +75,11 @@ n + 1 + 2 + 4 + 8 + ... + (2 elevado a k) => n + (2 elevado a (k-1)) - 2 => 3n -
 **Amortização => n/n=O(1)**
 
 Diante disso, para inserção de muitos elementos, a estratégia mais eficiente em termos de performance é a da duplicação.
+
+### Implementação com Lista Ligada
+
+Com lista ligada, o topo passa a ser o início, ou seja, o elemento é adicionado e removido do início.
+
+Isso ocorre por questões de desempenho, pois o nó do topo como referência é possível dar push e pop em O(1), enquanto adicionando no final seria possível apenas o push como O(1), enquanto o pop deveria percorer por todos os nós linkados até o penúltimo, para que o mesmo passe a referenciar o próximo como nulo.
+
+
