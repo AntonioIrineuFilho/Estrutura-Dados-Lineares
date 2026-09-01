@@ -19,7 +19,7 @@ O conjunto de operações são:
 - **insertBefore(n, o)**: Insere o objeto na posição anterior à posição n e retorna a nova posição
 - **insertAfter(n, o)**: Insere o objeto na posição seguinte à posição n e retorna a nova posição
 - **insertFirst(o)**: Insere o objeto o na primeira posição e retorna a posição
-- **insertFirst(o)**: Insere o objeto o na última posição e retorna a posição
+- **insertLast(o)**: Insere o objeto o na última posição e retorna a posição
 - **remove(n)**: Remove a posição n e retorna o elemento
 - **size()**: Retorna a quantidade de elementos na lista
 - **isEmpty()**: Verifica se a lista está vazia
