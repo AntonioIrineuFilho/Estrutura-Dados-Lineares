@@ -1,14 +1,14 @@
-class EVetor extends RuntimeException {
-    public EVetor(String message) {
-        super(message);
+class EVetorRankInvalido extends RuntimeException {
+    public EVetorRankInvalido() {
+        super("Rank inválido");
     }
 }
 
 interface Vetor {
-    public Object elementAtRank(int r) throws EVetor;
-    public Object replaceAtRank(int r, Object o);
-    public void insertAtRank(int r, Object o);
-    public Object removeAtRank(int r);
+    public Object elementAtRank(int r) throws EVetorRankInvalido;
+    public Object replaceAtRank(int r, Object o) throws EVetorRankInvalido;
+    public void insertAtRank(int r, Object o) throws EVetorRankInvalido;
+    public Object removeAtRank(int r) throws EVetorRankInvalido;
     public int size();
     public boolean isEmpty();
 }
@@ -26,43 +26,48 @@ class VetorWithArray implements Vetor {
     }
 
     public Object elementAtRank(int r) {
-        if (r >= this.max_size || r < 0) {
-            throw new EVetor("Rank fora da capacidade do array");
-        }
-        if (this.array[r] == null) {
-            throw new EVetor("Rank vazio, nada a retornar");
+        if (r > this.size() || r < 0) {
+            throw new EVetorRankInvalido();
         }
         return this.array[r];
     }
 
     public Object replaceAtRank(int r, Object o) {
-        if (r >= this.max_size || r < 0) {
-            throw new EVetor("Rank fora da capacidade do array");
-        }
-        if (this.array[r] == null) {
-            throw new EVetor("Rank vazio, nada a substituir");
+        if (r > this.size() || r < 0) {
+            throw new EVetorRankInvalido();
         }
         Object old = this.array[r];
         this.array[r] = o;
         return old;
     }
 
-    public void insertAtRank(int r, Object o) {
-        if (r >= this.max_size || r < 0) {
-            throw new EVetor("Rank fora da capacidade do array");
+    public void insertAtRank(int r, Object o) { 
+        if (r > this.size() || r < 0) {
+            throw new EVetorRankInvalido();
         }
-        this.array[r] = o;  
-        this.size++;      
+        Object current = this.array[r];
+        for (int i = r; i < this.size(); i++) {
+            Object next = this.array[i+1];
+            this.array[i+1] = current;
+            current = next;
+        }
+        this.array[r] = o;
+        this.size++;
     }
 
-    public Object removeAtRank(int r) {
-        if (r >= this.max_size || r < 0) {
-            throw new EVetor("Rank fora da capacidade do array");
+    public Object removeAtRank(int r) {    
+        if (r >= this.size() || r < 0) {
+            throw new EVetorRankInvalido();
         }
-        Object removed = this.array[r];
-        this.array[r] = null;
+        Object obj = this.array[r];
+        Object current = this.array[this.size()-1];
+        for (int i = this.size()-1; i > r; i--) {
+            Object prev = this.array[i-1];
+            this.array[i-1] = current;
+            current = prev;
+        }
         this.size--;
-        return removed;        
+        return obj;
     }
 
     public int size() {
@@ -74,7 +79,11 @@ class VetorWithArray implements Vetor {
     }
 
     public Object[] list() {
-        return this.array;
+        Object [] list = new Object[this.size];
+        for (int i = 0; i < this.size(); i++) {
+            list[i] = this.array[i];
+        }
+        return list;
     }
 
 }
@@ -83,24 +92,14 @@ public class VetorMain {
     public static void main(String[] args) {
         VetorWithArray test = new VetorWithArray(20);
         System.out.println("TAMANHO: " + test.size());
-        test.insertAtRank(10, 40);
-        test.insertAtRank(0, 34);
-        test.insertAtRank(14, 26);
+        for (int i = 0; i < 20; i++) {
+            test.insertAtRank(i, i);
+        }
+        test.removeAtRank(19);
         for (Object obj : test.list()) {
             System.out.print(obj + " ");
         }
         System.out.println();
         System.out.println("TAMANHO: " + test.size());
-        test.removeAtRank(0);
-        System.out.println("TAMANHO: " + test.size());
-        test.replaceAtRank(14, 27);
-        System.out.println("TAMANHO: " + test.size());
-        System.out.println("Elemento no rank 10: " + test.elementAtRank(10));
-        for (Object obj : test.list()) {
-            System.out.print(obj + " ");
-        }
-        System.out.println();
-        System.out.println("TAMANHO: " + test.size());
-        test.insertAtRank(20, 26);
     }
 }
