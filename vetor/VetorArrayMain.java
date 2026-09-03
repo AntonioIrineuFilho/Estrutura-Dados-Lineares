@@ -45,6 +45,14 @@ class VetorWithArray implements Vetor {
         if (r > this.size() || r < 0) {
             throw new EVetorRankInvalido();
         }
+        if (this.size() == this.max_size) {
+            this.max_size *= 2;
+            Object[] newArray = new Object[this.max_size];
+            for (int i = 0; i < this.size(); i++) {
+                newArray[i] = this.array[i];
+            }
+            this.array = newArray;
+        }
         Object current = this.array[r];
         for (int i = r; i < this.size(); i++) {
             Object next = this.array[i+1];
@@ -66,6 +74,7 @@ class VetorWithArray implements Vetor {
             this.array[i-1] = current;
             current = prev;
         }
+        this.array[this.size()-1] = null;
         this.size--;
         return obj;
     }
@@ -78,28 +87,26 @@ class VetorWithArray implements Vetor {
         return this.size==0;
     }
 
-    public Object[] list() {
-        Object [] list = new Object[this.size];
-        for (int i = 0; i < this.size(); i++) {
-            list[i] = this.array[i];
+    public void print() {
+        for (int i = 0; i < this.max_size; i++) {
+            System.out.print(this.array[i] + " ");
         }
-        return list;
+        System.out.println();
     }
 
 }
 
-public class VetorMain {
+public class VetorArrayMain {
     public static void main(String[] args) {
         VetorWithArray test = new VetorWithArray(20);
         System.out.println("TAMANHO: " + test.size());
         for (int i = 0; i < 20; i++) {
             test.insertAtRank(i, i);
         }
+        test.print();
+        test.insertAtRank(20, 20);
+        test.print();
         test.removeAtRank(19);
-        for (Object obj : test.list()) {
-            System.out.print(obj + " ");
-        }
-        System.out.println();
-        System.out.println("TAMANHO: " + test.size());
+        test.print();
     }
 }
