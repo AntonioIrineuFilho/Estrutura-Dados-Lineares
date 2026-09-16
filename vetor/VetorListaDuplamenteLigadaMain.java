@@ -41,7 +41,7 @@ interface Vetor {
     public boolean isEmpty();
 }
 
-class VetorListaDuplamenteLigada {
+class VetorListaDuplamenteLigada implements Vetor {
     private int size;
     private Node start;
     public VetorListaDuplamenteLigada() {
