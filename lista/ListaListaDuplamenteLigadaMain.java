@@ -36,22 +36,22 @@ class Node {
 interface Lista {
     public boolean isFirst(Node p) throws ELista;
     public boolean isLast(Node p) throws ELista;
-    public Node first();
-    public Node last();
+    public Node first() throws ELista;
+    public Node last() throws ELista;
     public Node before(Node p) throws ELista;
     public Node after(Node p) throws ELista;
-    public void replaceElement(Node p, Object o) throws ELista;
+    public Object replaceElement(Node p, Object o) throws ELista;
     public void swapElements(Node p, Node q) throws ELista;
     public Node insertBefore(Node p, Object o) throws ELista;
     public Node insertAfter(Node p, Object o) throws ELista;
     public Node insertFirst(Object o);
     public Node insertLast(Object o);
-    public Object remove(Node p);
+    public Object remove(Node p) throws ELista;
     public int size();
     public boolean isEmpty();
 }
 
-class ListaWithListaDuplamenteLigada {
+class ListaWithListaDuplamenteLigada implements Lista {
     private int size;
     private Node start, end;
     public ListaWithListaDuplamenteLigada() {
@@ -89,11 +89,13 @@ class ListaWithListaDuplamenteLigada {
         }
         return p.getNext();   
     }
-    public void replaceElement(Node p, Object o) {
+    public Object replaceElement(Node p, Object o) {
         if (p == null) {
             throw new ELista("Posição inválida");
         }
+        Object old = p.getElement();
         p.setElement(o);   
+        return old;
     }
     public void swapElements(Node p, Node q) {
         if (p == null || q == null) {
