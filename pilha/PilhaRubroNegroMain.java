@@ -29,16 +29,9 @@ class PilhaRubroNegroArray implements PilhaRubroNegro {
         this.array = new Object[this.max_size];
     }
 
-    public void pushPilhaRubro(Object obj) {
-        if (this.top_rubro + 1 == this.top_negro || (this.sizePilhaRubro() + this.sizePilhaNegro()) == this.max_size / 3) {
+    public void duplicateArrayMaxSize() {
             int newMaxSize;
-            if (this.top_rubro + 1 == this.top_negro) { 
-                newMaxSize = this.max_size * 2; 
-            }
-            else { 
-                if (this.max_size % 2 == 0) { newMaxSize = this.max_size / 2; }
-                else { newMaxSize = (this.max_size - 1) / 2; }
-            }
+            newMaxSize = this.max_size * 2; 
             Object[] newArray = new Object[newMaxSize];
             for (int i = 0; i < this.sizePilhaRubro(); i++) {
                 newArray[i] = this.array[i];
@@ -49,39 +42,9 @@ class PilhaRubroNegroArray implements PilhaRubroNegro {
             this.top_negro = newMaxSize - this.sizePilhaNegro();
             this.max_size = newMaxSize;
             this.array = newArray;
-        } 
-        this.array[++this.top_rubro] = obj;
     }
 
-    public void pushPilhaNegro(Object obj) {
-        if (this.top_rubro + 1 == this.top_negro || (this.sizePilhaRubro() + this.sizePilhaNegro()) == this.max_size / 3) {
-            int newMaxSize;
-            if (this.top_rubro + 1 == this.top_negro) { 
-                newMaxSize = this.max_size * 2; 
-            }
-            else { 
-                if (this.max_size % 2 == 0) { newMaxSize = this.max_size / 2; }
-                else { newMaxSize = (this.max_size - 1) / 2; }
-            }
-            Object[] newArray = new Object[newMaxSize];
-            for (int i = 0; i < this.sizePilhaRubro(); i++) {
-                newArray[i] = this.array[i];
-            }
-            for (int i = 0; i < this.sizePilhaNegro(); i++) {
-                newArray[newMaxSize-1-i] = this.array[this.max_size-1-i];
-            }
-            this.top_negro = newMaxSize - this.sizePilhaNegro();
-            this.max_size = newMaxSize;
-            this.array = newArray;
-        } 
-        this.array[--this.top_negro] = obj;
-    } 
-    
-    public Object popPilhaRubro() {
-        if (this.isEmptyPilhaRubro()) {
-            throw new EPilhaVazia();
-        } 
-        if ((this.sizePilhaRubro() + this.sizePilhaNegro()) == this.max_size / 3) {
+    public void reduceArrayMaxSizeByHalf() {
             int newMaxSize;
             if (this.max_size % 2 == 0) { newMaxSize = this.max_size / 2; }
             else { newMaxSize = (this.max_size - 1) / 2; }
@@ -95,6 +58,28 @@ class PilhaRubroNegroArray implements PilhaRubroNegro {
             this.top_negro = newMaxSize - this.sizePilhaNegro();
             this.max_size = newMaxSize;
             this.array = newArray;
+    }
+
+    public void pushPilhaRubro(Object obj) {
+        if (this.top_rubro + 1 == this.top_negro) {
+            this.duplicateArrayMaxSize();
+        } 
+        this.array[++this.top_rubro] = obj;
+    }
+
+    public void pushPilhaNegro(Object obj) {
+        if (this.top_rubro + 1 == this.top_negro) {
+            this.duplicateArrayMaxSize();
+        } 
+        this.array[--this.top_negro] = obj;
+    } 
+    
+    public Object popPilhaRubro() {
+        if (this.isEmptyPilhaRubro()) {
+            throw new EPilhaVazia();
+        } 
+        if ((this.sizePilhaRubro() + this.sizePilhaNegro()) <= this.max_size / 3) {
+            this.reduceArrayMaxSizeByHalf();
         } 
         Object temp = this.array[this.top_rubro];
         this.array[this.top_rubro] = null;
@@ -106,20 +91,8 @@ class PilhaRubroNegroArray implements PilhaRubroNegro {
         if (this.isEmptyPilhaNegro()) {
             throw new EPilhaVazia();
         } 
-        if ((this.sizePilhaRubro() + this.sizePilhaNegro()) == this.max_size / 3) {
-            int newMaxSize;
-            if (this.max_size % 2 == 0) { newMaxSize = this.max_size / 2; }
-            else { newMaxSize = (this.max_size - 1) / 2; }
-            Object[] newArray = new Object[newMaxSize];
-            for (int i = 0; i < this.sizePilhaRubro(); i++) {
-                newArray[i] = this.array[i];
-            }
-            for (int i = 0; i < this.sizePilhaNegro(); i++) {
-                newArray[newMaxSize-1-i] = this.array[this.max_size-1-i];
-            }
-            this.top_negro = newMaxSize - this.sizePilhaNegro();
-            this.max_size = newMaxSize;
-            this.array = newArray;
+        if ((this.sizePilhaRubro() + this.sizePilhaNegro()) <= this.max_size / 3) {
+            this.reduceArrayMaxSizeByHalf();
         } 
         Object temp = this.array[this.top_negro];
         this.array[this.top_negro] = null;
@@ -195,5 +168,18 @@ public class PilhaRubroNegroMain {
          System.out.println("TAMANHO PILHA NEGRO: " + test.sizePilhaNegro());
          System.out.println("PILHA RUBRO ESTÁ VAZIA? " + test.isEmptyPilhaRubro());
          System.out.println("PILHA NEGRO ESTÁ VAZIA? " + test.isEmptyPilhaNegro());
+
+        for (int i = 0; i < 13; i++) {
+            test.popPilhaRubro();
+            test.popPilhaNegro();
+         }
+         list = test.listArray();
+         for (Object obj : list) {
+            System.out.print(obj + " ");
+         }
+         System.out.println();
+         System.out.println();
+         System.out.println("TAMANHO PILHA RUBRO: " + test.sizePilhaRubro());
+         System.out.println("TAMANHO PILHA NEGRO: " + test.sizePilhaNegro());
     }
 }
