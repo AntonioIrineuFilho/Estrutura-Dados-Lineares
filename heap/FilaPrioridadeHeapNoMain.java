@@ -1,3 +1,5 @@
+import java.util.Random;
+
 class Node {
     int key;
     Node parent, leftChild, rightChild;
@@ -183,11 +185,13 @@ class FilaPrioridadeHeapNo {
     }
 }
 
-public class FilaPrioridadeHeapNoMain() {
+public class FilaPrioridadeHeapNoMain {
     public static void main(String args[]) {
         FilaPrioridadeHeapNo heap = new FilaPrioridadeHeapNo();
         for (int i = 0; i < 20; i++) {
-            heap.insert(i);
+            Random random = new Random();
+            int n = random.nextInt(100);
+            heap.insert(n);
         }
         for (int i = 0; i < 20; i++) {
             System.out.println(heap.removeMin());
