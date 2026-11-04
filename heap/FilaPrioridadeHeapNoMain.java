@@ -193,8 +193,11 @@ public class FilaPrioridadeHeapNoMain {
             int n = random.nextInt(100);
             heap.insert(n);
         }
+        System.out.println("TAMANHO: " + heap.size());
         for (int i = 0; i < 20; i++) {
-            System.out.println(heap.removeMin());
+            System.out.print(heap.removeMin() + " ");
         }
+        System.out.println();
+        System.out.println("TAMANHO: " + heap.size());
     }
 }
