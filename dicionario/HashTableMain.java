@@ -34,11 +34,11 @@ class HashTable {
     }
     private int size, max_size;
     private Entry[] array;
-    private final CollisionMethod collisionMethod;
+    private CollisionMethod collisionMethod;
     // Marcador de posicao removida
-    private Entry AVAILABLE = new Entry(0, null);
+    private Entry AVAILABLE;
     // Limite do fator de carga
-    private double MAX_LOAD_FACTOR = 0.5;
+    private double MAX_LOAD_FACTOR;
 
     public HashTable(int max_size, CollisionMethod collisionMethod) {
         if (max_size < 3) {
@@ -48,6 +48,8 @@ class HashTable {
         this.size = 0;
         this.array = new Entry[this.max_size];
         this.collisionMethod = collisionMethod;
+        this.AVAILABLE = new Entry(0, null);
+        this.MAX_LOAD_FACTOR = 0.5;
     }
 
     // Retorna o proximo numero primo
@@ -78,11 +80,9 @@ class HashTable {
     // Encontra o maior primo menor que N
     private int secondaryPrime() {
         int q = this.max_size - 1;
-
         while (q >= 2 && !isPrime(q)) {
             q--;
         }
-
         return q;
     }
 
@@ -95,16 +95,12 @@ class HashTable {
     // Calcula a posicao conforme a tecnica de tratamento de colisao
     private int probeIndex(int key, int attempt) {
         int initialIndex = this.hash(key);
-
         if (this.collisionMethod == CollisionMethod.LINEAR_PROBING) {
             // Linear probing: (h(k) + j) mod N
             return (initialIndex + attempt) % this.max_size;
         }
-
         // Hashing duplo: (h(k) + j * d(k)) mod N
-        long index = initialIndex +
-                     (long) attempt * this.secondaryHash(key);
-
+        long index = initialIndex + (long) attempt * this.secondaryHash(key);
         return (int) (index % this.max_size);
     }
 
@@ -117,22 +113,15 @@ class HashTable {
     private void rehash() {
         Entry[] oldArray = this.array;
         int oldSize = this.size;
-
         this.max_size = nextPrime(this.max_size * 2);
         this.array = new Entry[this.max_size];
         this.size = 0;
-
         for (int i = 0; i < oldArray.length; i++) {
             Entry current = oldArray[i];
-
             if (current != null && current != AVAILABLE) {
-                this.insertWithoutRehash(
-                    current.getKey(),
-                    current.getElement()
-                );
+                this.insertWithoutRehash(current.getKey(), current.getElement());
             }
         }
-
         if (this.size != oldSize) {
             throw new RuntimeException("Erro durante o rehash");
         }
@@ -142,16 +131,13 @@ class HashTable {
     private void insertWithoutRehash(int key, String element) {
         for (int i = 0; i < this.max_size; i++) {
             int index = this.probeIndex(key, i);
-
             if (this.array[index] == null ||
                 this.array[index] == AVAILABLE) {
-
                 this.array[index] = new Entry(key, element);
                 this.size++;
                 return;
             }
         }
-
         throw new RuntimeException("Tabela hash cheia");
     }
 
@@ -178,8 +164,7 @@ class HashTable {
                 return null;
             }
             // AVAILABLE nao interrompe a busca
-            if (current != AVAILABLE &&
-                current.getKey() == key) {
+            if (current != AVAILABLE && current.getKey() == key) {
                 return current.getElement();
             }
         }
@@ -210,11 +195,10 @@ class HashTable {
     public Iterator<Integer> keys() {
         return new Iterator<Integer>() {
             private int currentIndex = 0;
-            // Pula posicoes vazias e removidas.
+            // Pula posicoes vazias e removidas
             private void advance() {
                 while (this.currentIndex < max_size &&
-                    (array[this.currentIndex] == null ||
-                     array[this.currentIndex] == AVAILABLE)) {
+                    (array[this.currentIndex] == null || array[this.currentIndex] == AVAILABLE)) {
                     this.currentIndex++;
                 }
             }
@@ -239,9 +223,7 @@ class HashTable {
             private int currentIndex = 0;
             private void advance() {
                 while (this.currentIndex < max_size &&
-                    (array[this.currentIndex] == null ||
-                     array[this.currentIndex] == AVAILABLE)) {
-
+                    (array[this.currentIndex] == null || array[this.currentIndex] == AVAILABLE)) {
                     this.currentIndex++;
                 }
             }
